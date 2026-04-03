@@ -8,22 +8,22 @@
 **Subject:** Detection and Analysis of Multi-Stage Compromise on Endpoint azuki-sl  
 
 ---
-## Scenario
+## Scenario :small_blue_diamond:
 A competitor undercut a 6-year shipping contract by exactly 3%.  Supplier contracts and pricing data appeared on underground forums.  
 
 ### Company 
 Azuki Import/Export trading Co. - 23 employees, shipping logistics Japan/SE Asia  
 
-## Executive Summary
+## Executive Summary :small_blue_diamond:
 On November 19, 2025, a sophisticated multi-stage attack was detected targeting the endpoint `azuki-sl`. The adversary gained initial access via a successful brute-force attack on a legitimate user account, followed by defense evasion, credential theft, and data exfiltration. The attack culminated in lateral movement to secondary internal assets. This report details the chronological events, the KQL queries used for discovery, and the recommended response actions.  
 
 ---
 
-## Platforms and Languages Leveraged
+## Platforms and Languages Leveraged :small_blue_diamond:
 - **Platforms:** Windows 10 Pro, Azure Log Analytics, Azure VM, Microsoft Defender for Endpoint (MDE), MITRE ATT&CK
 - **Languages & Tools:** PowerShell, Kusto Query Language (KQL), Regular Expressions (Regex) specifically used within KQL, and basic scripting utilities.     
 
-## **Indicators of Compromise (IoCs) Discovery Plan**
+## **Indicators of Compromise (IoCs) Discovery Plan** :warning:
 The following Microsoft Defender for Endpoint (MDE) log table types were utilized to identify specific IoCs:
 
 ### **DeviceLogonEvents**
@@ -65,10 +65,10 @@ This table was used to identify the creation of malicious scripts and tools in t
 ---- 
 
 
-## Investigation & Discovery
+## Investigation & Discovery :chart_with_downwards_trend:
 This section details the chronological progression of the intrusion on device azuki-sl, mapped to the MITRE ATT&CK framework.   
 
-### **Phase 1: Initial Access & Reconnaissance**
+### :triangular_flag_on_post: **Phase 1: Initial Access & Reconnaissance**
 The attacker established a foothold by targeting administrative accounts via remote services. 
 
 - **Initial Access (RDP Brute Force):** <img width="777" height="181" alt="image" src="https://github.com/user-attachments/assets/e324bd4a-dfe3-4607-a9ea-dc0362c97655" />
@@ -83,14 +83,14 @@ The attacker established a foothold by targeting administrative accounts via rem
 ---  
 
 
-### **Phase 2: Execution & Tool Ingress**  
+### :triangular_flag_on_post: **Phase 2: Execution & Tool Ingress**  
 Following successful access, the attacker leveraged native Windows binaries to download a malicious toolkit.  
 - **Ingress Tool Transfer (Living off the Land):**<img width="898" height="203" alt="image" src="https://github.com/user-attachments/assets/9c406656-da31-4e27-9958-1cf4ebf7a267" />
  
   **Attacker Action:** Used `certutil.exe` to download two malicious executables, `svchost.exe` and `mm.exe`, from `http://78.141.196.6:8080` into a custom staging directory. <img width="825" height="307" alt="image" src="https://github.com/user-attachments/assets/88135e92-2d0a-4ea8-9522-e4bb789069df" />
 ---  
 
-### **Phase 3: Persistence & Defense Evasion**
+### :triangular_flag_on_post: **Phase 3: Persistence & Defense Evasion**
 The attacker implemented multiple layers of persistence and disabled security features to maintain long-term access.  
 - **Hidden Staging & Directory Creation:** <img width="937" height="175" alt="image" src="https://github.com/user-attachments/assets/fb188d8f-5e6e-42e2-9908-d74d70c64252" />  
   **Attacker Action:** Created `C:\ProgramData\WindowsCache` and used `attrib.exe +h +s` to hide the staging folder from standard user interfaces. <img width="925" height="338" alt="image" src="https://github.com/user-attachments/assets/9fe3e3f7-96a6-49f3-b528-7f1afc53db16" />  
@@ -102,7 +102,7 @@ The attacker implemented multiple layers of persistence and disabled security fe
   **Attacker Action:** Created a persistent scheduled task named "Windows Update Check" configured to run the malicious `svchost.exe` from the hidden staging directory. <img width="946" height="321" alt="image" src="https://github.com/user-attachments/assets/c74eda5a-b25d-4b50-bc23-24b04697267a" /> <img width="865" height="195" alt="image" src="https://github.com/user-attachments/assets/3bfc1d1f-abbf-4401-b3b2-3f8e9b07d3fd" />
 ---  
 
-### **Phase 4: Credential Access & Lateral Movement**  
+### :triangular_flag_on_post: **Phase 4: Credential Access & Lateral Movement**  
 The attacker extracted authentication secrets to pivot toward high-value internal assets.   
 - **OS Credential Dumping:** <img width="816" height="95" alt="image" src="https://github.com/user-attachments/assets/d6576ed9-f399-4362-804f-239e6261615d" />  
   **Attacker Action:** Executed the renamed Mimikatz binary (`mm.exe`) using the `sekurlsa::logonpasswords` module to extract plaintext credentials from system memory.
@@ -113,7 +113,7 @@ The attacker extracted authentication secrets to pivot toward high-value interna
   <img width="938" height="342" alt="image" src="https://github.com/user-attachments/assets/44b435c7-2bb1-45a7-9a79-f2e75c49c9e7" />
 ---
 
-### **Phase 5: Exfiltration & Anti-Forensics**  
+### :triangular_flag_on_post: **Phase 5: Exfiltration & Anti-Forensics**  
 In the final phase, the attacker staged collected data, exfiltrated it to a cloud service, and attempted to wipe evidence of the intrusion.
 - **Data Staging & Exfiltration:** <img width="881" height="122" alt="image" src="https://github.com/user-attachments/assets/eec21154-345c-4bcf-82a0-85e015bfd13b" />  
   **Attacker Action:** Compressed stolen data into `export-data.zip` and used `curl.exe` to exfiltrate the archive to a Discord webhook over HTTPS. <img width="937" height="196" alt="image" src="https://github.com/user-attachments/assets/acc2821d-ce3d-447a-98ca-04e61fa291d4" />  
