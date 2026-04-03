@@ -146,7 +146,7 @@ In the final phase, the attacker staged collected data, exfiltrated it to a clou
 Based on the findings in the **Azuki Series Pt.1** investigation, here is the organized summary of the intrusion mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.
 --- 
 
-### **Based on the findings in the Azuki Series Pt.1 investigation, this is the organized intrusion summary mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.**
+### **Organized intrusion summary mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.**
 ###  :collision:**MITRE ATT&CK Mapping**:collision:
 
 | Phase | Tactic | Technique Name | ID | Description of Activity |
