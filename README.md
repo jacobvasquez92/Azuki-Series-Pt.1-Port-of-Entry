@@ -69,17 +69,32 @@ This table was used to identify the creation of malicious scripts and tools in t
 This section details the chronological progression of the intrusion on device azuki-sl, mapped to the MITRE ATT&CK framework.   
 
 ### **Phase 1: Initial Access & Reconnaissance**
-The attacker established a foothold by targeting administrative accounts via remote services.  
+The attacker established a foothold by targeting administrative accounts via remote services. 
 
-- **Initial Access (RDP Brute Force):** <img width="736" height="176" alt="image" src="https://github.com/user-attachments/assets/1217cfcd-705e-4ebd-bc03-a7de4222f6c5" />
+- **Initial Access (RDP Brute Force):** <img width="777" height="181" alt="image" src="https://github.com/user-attachments/assets/e324bd4a-dfe3-4607-a9ea-dc0362c97655" />
 
-- **Attacker Action:** After a high-volume brute-force campaign from `115.247.157.74` against the `administrator` account, a successful logon was achieved by account `kenji.sato` from remote `IP 88.97.178.12`.<img width="740" height="195" alt="image" src="https://github.com/user-attachments/assets/72c12c66-ff5a-40f8-9632-bb8d066ef449" />
+
+- **Attacker Action:** After a high-volume brute-force campaign from `115.247.157.74` against the `administrator` account, a successful logon was achieved by account `kenji.sato` from remote `IP 88.97.178.12`. <img width="740" height="195" alt="image" src="https://github.com/user-attachments/assets/72c12c66-ff5a-40f8-9632-bb8d066ef449" />
 
 
 - **Network Discovery:** <img width="898" height="156" alt="image" src="https://github.com/user-attachments/assets/15c42a67-3832-4758-929b-8bb209a5799f" />
 
 - **Attacker Action:** The attacker executed `ARP.EXE -a` to enumerate local network devices and hardware addresses to identify potential targets for lateral movement. <img width="807" height="273" alt="image" src="https://github.com/user-attachments/assets/de1c83d1-d3b2-4ca1-8946-259c234b9419" />
+---  
 
+
+### **Phase 2: Execution & Tool Ingress**  
+Following successful access, the attacker leveraged native Windows binaries to download a malicious toolkit.  
+- **Ingress Tool Transfer (Living off the Land):**<img width="898" height="203" alt="image" src="https://github.com/user-attachments/assets/9c406656-da31-4e27-9958-1cf4ebf7a267" />
+- **Attacker Action:** Used `certutil.exe` to download two malicious executables, `svchost.exe` and `mm.exe`, from `http://78.141.196.6:8080` into a custom staging directory. <img width="825" height="307" alt="image" src="https://github.com/user-attachments/assets/88135e92-2d0a-4ea8-9522-e4bb789069df" />
+---  
+
+### **Phase 3: Persistence & Defense Evasion**
+The attacker implemented multiple layers of persistence and disabled security features to maintain long-term access.  
+- **Hidden Staging & Directory Creation:** <img width="937" height="175" alt="image" src="https://github.com/user-attachments/assets/fb188d8f-5e6e-42e2-9908-d74d70c64252" />
+- **Attacker Action:** Created `C:\ProgramData\WindowsCache` and used `attrib.exe +h +s` to hide the staging folder from standard user interfaces. <img width="925" height="338" alt="image" src="https://github.com/user-attachments/assets/9fe3e3f7-96a6-49f3-b528-7f1afc53db16" />
+
+ 
 
 
 
