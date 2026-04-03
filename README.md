@@ -1,5 +1,5 @@
-# Azuki Series Pt.1 
-## Port of Entry  Threat Hunt Report: Unauthorized Access and Data Exfiltration (Case: Azuki-SL)  
+# Azuki Series Pt.1 Port of Entry
+## Threat Hunt Report: Unauthorized Access and Data Exfiltration (Case: Azuki-SL)  
 
 **Date:** March 28, 2026 
 
@@ -91,8 +91,16 @@ Following successful access, the attacker leveraged native Windows binaries to d
 
 ### **Phase 3: Persistence & Defense Evasion**
 The attacker implemented multiple layers of persistence and disabled security features to maintain long-term access.  
-- **Hidden Staging & Directory Creation:** <img width="937" height="175" alt="image" src="https://github.com/user-attachments/assets/fb188d8f-5e6e-42e2-9908-d74d70c64252" />
-- **Attacker Action:** Created `C:\ProgramData\WindowsCache` and used `attrib.exe +h +s` to hide the staging folder from standard user interfaces. <img width="925" height="338" alt="image" src="https://github.com/user-attachments/assets/9fe3e3f7-96a6-49f3-b528-7f1afc53db16" />
+- **Hidden Staging & Directory Creation:** <img width="937" height="175" alt="image" src="https://github.com/user-attachments/assets/fb188d8f-5e6e-42e2-9908-d74d70c64252" />  
+- **Attacker Action:** Created `C:\ProgramData\WindowsCache` and used `attrib.exe +h +s` to hide the staging folder from standard user interfaces. <img width="925" height="338" alt="image" src="https://github.com/user-attachments/assets/9fe3e3f7-96a6-49f3-b528-7f1afc53db16" />  
+- **Disabling Security Defenses (Defender Exclusions):** <img width="838" height="188" alt="image" src="https://github.com/user-attachments/assets/b8e3aa7d-02b1-48b1-9a5a-654c1dfdbf12" />  
+- **Attacker Action:** Modified the registry to add three unique file extensions (`.exe`, `.ps1`, `.bat`) and the specific staging path to Windows Defender's exclusion list. <img width="880" height="163" alt="image" src="https://github.com/user-attachments/assets/f4d40c9e-05f2-440f-9e58-d45108039d3c" />
+
+- **Scheduled Task Persistence:**
+- **Attacker Action:** Created a persistent scheduled task named "Windows Update Check" configured to run the malicious `svchost.exe` from the hidden staging directory. <img width="946" height="321" alt="image" src="https://github.com/user-attachments/assets/c74eda5a-b25d-4b50-bc23-24b04697267a" />
+
+
+
 
  
 
