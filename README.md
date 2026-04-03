@@ -128,7 +128,7 @@ In the final phase, the attacker staged collected data, exfiltrated it to a clou
 
 ---
 
-# Summary of Findings  
+# Summary of Findings  :books:
 
 ### **Chronological timeline summarizing the activity on `azuki-sl` from initial access to anti-forensic cleanup.**
 
@@ -165,7 +165,7 @@ Based on the findings in the **Azuki Series Pt.1** investigation, here is the or
 
 ---
 
-# Response & Remediation  
+# Response & Remediation  :ambulance:
 ### **Recommended Actions: Azuki Series Pt.1**
 
 Based on the vulnerabilities and attacker activities identified, the following recommendations provide a roadmap for immediate remediation, broader eviction, and long-term security hardening.
