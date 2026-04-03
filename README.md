@@ -128,6 +128,7 @@ In the final phase, the attacker staged collected data, exfiltrated it to a clou
 
 ---
 
+# Summary of Findings  
 
 ### **Chronological timeline summarizing the activity on `azuki-sl` from initial access to anti-forensic cleanup.**
 
@@ -162,8 +163,48 @@ Based on the findings in the **Azuki Series Pt.1** investigation, here is the or
 | **5** | **Exfiltration** | Exfiltration Over Web Service | [T1567](https://attack.mitre.org/techniques/T1567/) | Using `curl.exe` to post `export-data.zip` to a Discord Webhook. |
 | **5** | **Impact** | Indicator Removal: Clear Windows Event Logs | [T1070.001](https://attack.mitre.org/techniques/T1070/001/) | Execution of `wevtutil.exe cl Security` to wipe the audit trail. |
 
+---
 
+# Response & Remediation  
+### **Recommended Actions: Azuki Series Pt.1**
 
+Based on the vulnerabilities and attacker activities identified, the following recommendations provide a roadmap for immediate remediation, broader eviction, and long-term security hardening.
+
+---
+
+#### **1. Immediate Incident Response & Eviction**
+
+* **Terminate Compromised Sessions and Reset Credentials:**
+    * Immediately terminate all active RDP and network sessions for the `kenji.sato` and `fileadmin` accounts.
+    * Perform a mandatory password reset for all compromised users and any accounts that may have been cached in memory during the Mimikatz (`mm.exe`) execution.
+* **Remove Persistence Mechanisms:**
+    * Delete the unauthorized local administrator account named `support`.
+    * Deactivate and delete the **"Windows Update Check"** scheduled task and its associated payload located at `C:\ProgramData\WindowsCache\svchost.exe`.
+* **Sanitize Host Artifacts:**
+    * Delete the hidden staging directory `C:\ProgramData\WindowsCache`.
+    * Restore the Windows Defender registry configuration by removing all unauthorized exclusions for the `.exe`, `.ps1`, and `.bat` extensions, as well as the specific folder path exclusions.
+
+---
+
+#### **2. Network and Infrastructure Hardening**
+
+* **Secure Remote Access:**
+    * Disable RDP (`mstsc.exe`) access from public IP addresses.
+    * Implement a Virtual Private Network (VPN) or a secure gateway (e.g., Azure Bastion) for all remote administrative tasks to prevent external brute-force attempts.
+    * Enforce **Multi-Factor Authentication (MFA)** for all remote interactive logons.
+* **Implement Network Egress Filtering:**
+    * Block outbound traffic to the identified C2 IP address `78.141.196.6` at the perimeter firewall.
+    * Restrict or monitor the use of common web services like **Discord** for data transfer in production environments to mitigate exfiltration risks.
+
+---
+
+#### **3. Detection and Monitoring Enhancements**
+
+* **Deploy Living-off-the-Land (LotL) Monitoring:**
+    * Create custom detection rules for high-risk uses of `certutil.exe`, `attrib.exe`, and `wevtutil.exe` when used with arguments related to downloading files, hiding directories, or clearing logs.
+* **Monitor for Lateral Movement:**
+    * Configure alerts for the use of `cmdkey.exe` followed immediately by `mstsc.exe`, especially when targeting high-value internal assets like `10.1.0.188`.
+    * Audit for **Event ID 4624 (Successful Logon)** on critical servers to correlate with remote process executions identified on source workstations.
 
 
 
