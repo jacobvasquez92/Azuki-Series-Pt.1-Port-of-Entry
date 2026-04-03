@@ -129,7 +129,7 @@ In the final phase, the attacker staged collected data, exfiltrated it to a clou
 ---
 
 
-This chronological timeline summarizes the activity on **azuki-sl** from initial access to anti-forensic cleanup.
+### **Chronological timeline summarizing the activity on `azuki-sl` from initial access to anti-forensic cleanup.**
 
 * **2025-11-19 18:36:18** – **Initial Access:** Successful RDP logon for account `kenji.sato` from external IP `88.97.178.12` following a brute-force campaign.
 * **2025-11-19 18:42:05** – **Directory Staging:** The directory `C:\ProgramData\WindowsCache` is created to store malicious tools.
@@ -146,7 +146,7 @@ This chronological timeline summarizes the activity on **azuki-sl** from initial
 Based on the findings in the **Azuki Series Pt.1** investigation, here is the organized summary of the intrusion mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.
 --- 
 
-Based on the findings in the Azuki Series Pt.1 investigation, here is the organized summary of the intrusion mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques
+### **Based on the findings in the Azuki Series Pt.1 investigation, this is the organized intrusion summary mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.**
 ###  :collision:**MITRE ATT&CK Mapping**:collision:
 
 | Phase | Tactic | Technique Name | ID | Description of Activity |
