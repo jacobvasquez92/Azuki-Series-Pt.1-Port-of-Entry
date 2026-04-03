@@ -1,4 +1,7 @@
-# Azuki Series Pt.1 Port of Entry
+# Azuki Series Pt.1 - Port of Entry   
+  <img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/2cde9ee0-e8f2-454d-a08e-42a5e6b9346a" />
+
+
 ## Threat Hunt Report: Unauthorized Access and Data Exfiltration (Case: Azuki-SL)  
 
 **Date:** March 28, 2026 
@@ -8,18 +11,18 @@
 **Subject:** Detection and Analysis of Multi-Stage Compromise on Endpoint azuki-sl  
 
 ---
-## Scenario :small_blue_diamond:
+## Scenario
 A competitor undercut a 6-year shipping contract by exactly 3%.  Supplier contracts and pricing data appeared on underground forums.  
 
-### Company 
+### Company  
 Azuki Import/Export trading Co. - 23 employees, shipping logistics Japan/SE Asia  
 
-## Executive Summary :small_blue_diamond:
+## Executive Summary 
 On November 19, 2025, a sophisticated multi-stage attack was detected targeting the endpoint `azuki-sl`. The adversary gained initial access via a successful brute-force attack on a legitimate user account, followed by defense evasion, credential theft, and data exfiltration. The attack culminated in lateral movement to secondary internal assets. This report details the chronological events, the KQL queries used for discovery, and the recommended response actions.  
 
 ---
 
-## Platforms and Languages Leveraged :small_blue_diamond:
+## :small_blue_diamond: Platforms and Languages Leveraged 
 - **Platforms:** Windows 10 Pro, Azure Log Analytics, Azure VM, Microsoft Defender for Endpoint (MDE), MITRE ATT&CK
 - **Languages & Tools:** PowerShell, Kusto Query Language (KQL), Regular Expressions (Regex) specifically used within KQL, and basic scripting utilities.     
 
@@ -126,6 +129,38 @@ In the final phase, the attacker staged collected data, exfiltrated it to a clou
 ---
 
 
+This chronological timeline summarizes the activity on **azuki-sl** from initial access to anti-forensic cleanup.
+
+* **2025-11-19 18:36:18** – **Initial Access:** Successful RDP logon for account `kenji.sato` from external IP `88.97.178.12` following a brute-force campaign.
+* **2025-11-19 18:42:05** – **Directory Staging:** The directory `C:\ProgramData\WindowsCache` is created to store malicious tools.
+* **2025-11-19 18:44:12** – **Defense Evasion:** Execution of `attrib.exe +h +s` on the staging directory to hide it from the file system.
+* **2025-11-19 18:48:30** – **Tool Ingress:** `certutil.exe` is used to download `svchost.exe` and `mm.exe` from `http://78.141.196.6:8080`.
+* **2025-11-19 18:52:15** – **Impair Defenses:** Registry modifications add `.exe`, `.ps1`, and `.bat` extensions to Windows Defender exclusions.
+* **2025-11-19 18:55:40** – **Reconnaissance:** Execution of `ARP.EXE -a` to enumerate local network devices and map internal hardware addresses.
+* **2025-11-19 18:58:10** – **Persistence:** A scheduled task named "Windows Update Check" is created to execute the malicious `svchost.exe` payload.
+* **2025-11-19 19:02:22** – **Credential Access:** The renamed Mimikatz binary (`mm.exe`) is executed to dump plaintext passwords from memory.
+* **2025-11-19 19:05:45** – **Account Creation:** A local administrator account named `support` is created via `net.exe` for backdoor access.
+* **2025-11-19 19:10:37** – **Lateral Movement:** Stolen `fileadmin` credentials are used with `mstsc.exe` to RDP into the internal server `10.1.0.188`.
+* **2025-11-19 19:15:20** – **Data Exfiltration:** `curl.exe` is used to upload the archived `export-data.zip` to a Discord webhook.
+* **2025-11-19 19:18:55** – **Anti-Forensics:** The Security event log is cleared using `wevtutil.exe cl Security` to destroy the audit trail.
+Based on the findings in the **Azuki Series Pt.1** investigation, here is the organized summary of the intrusion mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques.
+--- 
+
+Based on the findings in the Azuki Series Pt.1 investigation, here is the organized summary of the intrusion mapped to the 5 distinct phases and the corresponding MITRE ATT&CK techniques
+###  :collision:**MITRE ATT&CK Mapping**:collision:
+
+| Phase | Tactic | Technique Name | ID | Description of Activity |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | **Initial Access** | Remote Services: Remote Desktop Protocol | [T1021.001](https://attack.mitre.org/techniques/T1021/001/) | External RDP logon to `kenji.sato` from IP `88.97.178.12`. |
+| **1** | **Reconnaissance** | System Network Configuration Discovery | [T1016](https://attack.mitre.org/techniques/T1016/) | Use of `ARP.EXE -a` to map the internal network. |
+| **2** | **Execution** | Ingress Tool Transfer | [T1105](https://attack.mitre.org/techniques/T1105/) | Using `certutil.exe -urlcache` to download `mm.exe` and `svchost.exe`. |
+| **3** | **Persistence** | Scheduled Task/Job: Scheduled Task | [T1053.005](https://attack.mitre.org/techniques/T1053/005/) | Creation of the "Windows Update Check" task for the malicious payload. |
+| **3** | **Defense Evasion** | Impair Defenses: Disable or Modify Tools | [T1562.001](https://attack.mitre.org/techniques/T1562/001/) | Adding `.exe`, `.ps1`, and folder paths to Defender Exclusions. |
+| **3** | **Defense Evasion** | Hide Artifacts: Hidden Files and Directories | [T1564.001](https://attack.mitre.org/techniques/T1564/001/) | Using `attrib.exe +h +s` on the `WindowsCache` directory. |
+| **4** | **Credential Access** | OS Credential Dumping: LSASS Memory | [T1003.001](https://attack.mitre.org/techniques/T1003/001/) | Execution of `mm.exe` (Mimikatz) `sekurlsa::logonpasswords`. |
+| **4** | **Lateral Movement** | Remote Services: Remote Desktop Protocol | [T1021.001](https://attack.mitre.org/techniques/T1021/001/) | Using `mstsc.exe` to move from `azuki-sl` to internal host `10.1.0.188`. |
+| **5** | **Exfiltration** | Exfiltration Over Web Service | [T1567](https://attack.mitre.org/techniques/T1567/) | Using `curl.exe` to post `export-data.zip` to a Discord Webhook. |
+| **5** | **Impact** | Indicator Removal: Clear Windows Event Logs | [T1070.001](https://attack.mitre.org/techniques/T1070/001/) | Execution of `wevtutil.exe cl Security` to wipe the audit trail. |
 
 
 
