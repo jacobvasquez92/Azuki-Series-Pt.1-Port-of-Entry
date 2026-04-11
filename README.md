@@ -22,7 +22,7 @@ On November 19, 2025, a sophisticated multi-stage attack was detected targeting 
 
 ---
 
-## :small_blue_diamond: Platforms and Languages Leveraged 
+## Platforms and Languages Leveraged 
 - **Platforms:** Windows 10 Pro, Azure Log Analytics, Azure VM, Microsoft Defender for Endpoint (MDE), MITRE ATT&CK
 - **Languages & Tools:** PowerShell, Kusto Query Language (KQL), Regular Expressions (Regex) specifically used within KQL, and basic scripting utilities.     
 
